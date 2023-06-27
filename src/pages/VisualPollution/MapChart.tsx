@@ -8,7 +8,7 @@ const MapChart = ({ setTooltipContent }: { setTooltipContent: Function }) => {
       projectionConfig={{
         rotate: [-10.0, -52.0, 0],
         center: [-5, -3],
-        scale: 1100,
+        scale: 1000,
       }}
     >
       <Geographies
@@ -27,6 +27,17 @@ const MapChart = ({ setTooltipContent }: { setTooltipContent: Function }) => {
               }}
               onMouseLeave={() => {
                 setTooltipContent('');
+              }}
+              onMouseDown={() => {
+                alert(`You clicked on ${geo.properties.name}!`);
+              }}
+              style={{
+                default: {
+                  fill: '#D6D6DA',
+                },
+                hover: {
+                  fill: '#04BB46',
+                },
               }}
             />
           ))

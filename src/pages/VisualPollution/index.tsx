@@ -24,7 +24,7 @@ const VisualPollutionPage: React.FC = () => {
             <SlideShow values={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']} />
           </div>
           <div className="tw-bg-white tw-p-4 tw-rounded tw-grow">
-            <div>
+            <div className="tw-h-full tw-flex tw-flex-col tw-justify-center">
               <MapChart setTooltipContent={setContent} />
             </div>
           </div>
