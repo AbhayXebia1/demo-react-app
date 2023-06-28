@@ -1,14 +1,23 @@
-import React, { memo } from 'react';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import React, { memo, useState } from 'react';
+import _ from 'lodash';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from 'react-simple-maps';
 
-const MapChart = ({ setTooltipContent }: { setTooltipContent: Function }) => {
+const MapChart = ({ setContent }: { setContent: Function }) => {
+  const [markerCoordinates, setMarkerCoordinates] = useState<
+    [number, number] | undefined
+  >();
+
   return (
     <ComposableMap
       projection="geoAzimuthalEqualArea"
       projectionConfig={{
-        rotate: [-10.0, -52.0, 0],
-        center: [-5, -3],
-        scale: 1000,
+        center: [44, 24],
+        scale: 1200,
       }}
     >
       <Geographies
@@ -22,27 +31,35 @@ const MapChart = ({ setTooltipContent }: { setTooltipContent: Function }) => {
             <Geography
               key={geo.rsmKey}
               geography={geo}
-              onMouseEnter={() => {
-                setTooltipContent(`${geo.properties.name}`);
-              }}
-              onMouseLeave={() => {
-                setTooltipContent('');
-              }}
-              onMouseDown={() => {
-                alert(`You clicked on ${geo.properties.name}!`);
+              onClick={() => {
+                console.log(geo);
+                setContent(_.get(geo, 'properties.name'));
+
+                const coordinates: [number, number] | undefined = _.get(
+                  geo,
+                  'geometry.coordinates[0][0][0]'
+                );
+
+                if (Array.isArray(coordinates) && coordinates.length === 2) {
+                  setMarkerCoordinates(coordinates);
+                }
+
+                alert(`You clicked on ${_.get(geo, 'properties.name')}!`);
               }}
               style={{
                 default: {
                   fill: '#D6D6DA',
-                },
-                hover: {
-                  fill: '#04BB46',
                 },
               }}
             />
           ))
         }
       </Geographies>
+      {!!_.size(markerCoordinates) && (
+        <Marker coordinates={markerCoordinates}>
+          <circle r={8} fill="#F53" />
+        </Marker>
+      )}
     </ComposableMap>
   );
 };

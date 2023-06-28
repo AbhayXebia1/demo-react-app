@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import SideMenu from './components/SideMenu';
 import Header from './components/Header';
 import VisualPollutionPage from './pages/VisualPollution';
@@ -19,53 +21,59 @@ const MENU_KEYS: string[] = [
   'municipalityView',
   'trends',
 ];
+const DEFAULT_ACTIVE_COMPONENT_KEY = 'visualPollution';
 
 const MENU_CONFIG: {
   [key: string]: {
     label: string;
     icon: any;
     component: React.FC;
-    isActive: boolean;
   };
 } = {
   gridView: {
     label: 'Grid View',
     icon: GridViewOutlinedIcon,
     component: FallbackComponent,
-    isActive: false,
   },
   visualPollution: {
     label: 'Visual Pollution',
     icon: ConstructionOutlinedIcon,
     component: VisualPollutionPage,
-    isActive: true,
   },
   municipalityView: {
     label: 'Municipality View',
     icon: LocationCityOutlinedIcon,
     component: FallbackComponent,
-    isActive: false,
   },
   trends: {
     label: 'Trends',
     icon: TrendingUpOutlinedIcon,
     component: FallbackComponent,
-    isActive: false,
   },
 };
 
 function App() {
+  const [activeComponentKey, setActiveComponentKey] = useState(
+    DEFAULT_ACTIVE_COMPONENT_KEY
+  );
+
   const ActiveComponent =
-    Object.values(MENU_CONFIG).find((item) => item.isActive)?.component ||
-    ErrorComponent;
+    MENU_CONFIG[activeComponentKey]?.component || ErrorComponent;
 
   return (
     <div className="tw-h-screen tw-w-screen">
       <div className="tw-h-full tw-w-full tw-flex tw-overflow-auto tw-bg-slate-100">
-        <SideMenu menuKeys={MENU_KEYS} menuConfig={MENU_CONFIG} />
-        <div className="tw-w-full">
+        <SideMenu
+          menuKeys={MENU_KEYS}
+          menuConfig={MENU_CONFIG}
+          activeComponentKey={activeComponentKey}
+          pageSelectionHandler={(key: string) => setActiveComponentKey(key)}
+        />
+        <div className="tw-w-full tw-flex tw-flex-col">
           <Header />
-          <ActiveComponent />
+          <div className="tw-p-5 tw-grow">
+            <ActiveComponent />
+          </div>
         </div>
       </div>
     </div>

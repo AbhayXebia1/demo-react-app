@@ -3,6 +3,8 @@ import orgLogo from '../images/orgLogo.svg';
 const SideMenu = ({
   menuKeys,
   menuConfig,
+  activeComponentKey,
+  pageSelectionHandler,
 }: {
   menuKeys: string[];
   menuConfig: {
@@ -10,9 +12,10 @@ const SideMenu = ({
       label: string;
       icon: any;
       component: React.FC;
-      isActive: boolean;
     };
   };
+  activeComponentKey: string;
+  pageSelectionHandler: Function;
 }) => {
   return (
     <div className="tw-bg-white tw-w-[6%] tw-min-w-[6rem] tw-border-r-2 tw-border-solid tw-border-r-slate-300">
@@ -24,7 +27,9 @@ const SideMenu = ({
       </div>
       <nav className="tw-flex tw-flex-col tw-gap-6 tw-items-center tw-mt-6">
         {menuKeys.map((key) => {
-          const { icon: Icon, isActive } = menuConfig[key];
+          const { icon: Icon } = menuConfig[key];
+          const isActive = key === activeComponentKey;
+
           return (
             <div
               key={key}
@@ -33,6 +38,7 @@ const SideMenu = ({
                   ? 'tw-border-l-4 tw-border-solid tw-border-green-700'
                   : ''
               }`}
+              onClick={() => pageSelectionHandler(key)}
             >
               <Icon color={isActive ? 'success' : 'inherit'} fontSize="large" />
             </div>
